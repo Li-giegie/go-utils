@@ -54,9 +54,7 @@ func GetDirInfo(_path string,filter ...func(fullPath string,info os.FileInfo) (p
 			continue
 		}
 
-		if len(filter) > 0 && !filter[0](tmpFullPath,info) {
-			continue
-		}
+		if len(filter) > 0 && !filter[0](tmpFullPath,info) { continue }
 
 		dirs = append(dirs,&FileInfo{
 			Name:    tmpFullPath,
