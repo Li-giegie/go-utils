@@ -12,7 +12,7 @@ type FileInfo struct {
 	Mode os.FileMode
 	ModTime time.Time
 	IsDir bool
-	err error
+	Err error
 }
 
 // 获取给定目录内的所有文件、目录信息,入参_path 路径，filter 过滤器，过滤掉不想获取的目录、文件，返回值false表示过滤掉
@@ -32,7 +32,7 @@ func GetDirInfo(_path string,filter ...func(fullPath string,info os.FileInfo) (p
 				Mode:    tmpInfo.Mode(),
 				ModTime: tmpInfo.ModTime(),
 				IsDir:   tmpInfo.IsDir(),
-				err:     nil,
+				Err:     nil,
 			}},nil
 		}
 		_path += "/"
@@ -49,7 +49,7 @@ func GetDirInfo(_path string,filter ...func(fullPath string,info os.FileInfo) (p
 		if err != nil {
 			dirs = append(dirs,&FileInfo{
 				Name:   tmpFullPath,
-				err:     err,
+				Err:     err,
 			} )
 			continue
 		}
@@ -64,7 +64,7 @@ func GetDirInfo(_path string,filter ...func(fullPath string,info os.FileInfo) (p
 			Mode:    info.Mode(),
 			ModTime: info.ModTime(),
 			IsDir:   info.IsDir(),
-			err:     nil,
+			Err:     nil,
 		})
 		if entry.IsDir() {
 			tmpInfo ,tmpErr  := GetDirInfo(tmpFullPath,filter...)
