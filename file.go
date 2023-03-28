@@ -19,6 +19,7 @@ type FileInfo struct {
 func GetDirInfo(_path string,filter ...func(fullPath string,info os.FileInfo) (pass bool)) ([]*FileInfo, error) {
 	var dirs = make([]*FileInfo,0)
 	var info fs.FileInfo
+
 	if _path[len(_path)-1] != '/' {
 		tmpInfo,err := os.Stat(_path)
 		if err != nil {
