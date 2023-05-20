@@ -1,4 +1,4 @@
-package id
+package Id
 
 import (
 	"fmt"
