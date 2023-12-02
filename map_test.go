@@ -62,6 +62,42 @@ func TestNewMapUint64(t *testing.T) {
 	}
 }
 
+func TestNewMapInt32(t *testing.T) {
+	m := NewMapInt32()
+	m.Set(1, 123)
+	m.Set(2, 456)
+	m.Set(3, 789)
+	fmt.Println(m.GetMap())
+	fmt.Println(m.Get(1))
+	for _, slice := range m.ToSlice() {
+		fmt.Println(slice)
+	}
+	for _, slice := range m.KeyToSlice() {
+		fmt.Println(slice)
+	}
+	for _, i := range m.ValueToSlice() {
+		fmt.Println(i)
+	}
+}
+
+func TestNewMapUint32(t *testing.T) {
+	m := NewMapUint32()
+	m.Set(1, 123)
+	m.Set(2, 456)
+	m.Set(3, 789)
+	fmt.Println(m.GetMap())
+	fmt.Println(m.Get(1))
+	for _, slice := range m.ToSlice() {
+		fmt.Println(slice)
+	}
+	for _, slice := range m.KeyToSlice() {
+		fmt.Println(slice)
+	}
+	for _, i := range m.ValueToSlice() {
+		fmt.Println(i)
+	}
+}
+
 // bench测试仅供参考
 // cpu: AMD Ryzen 5 5600H with Radeon Graphics
 // BenchmarkNewMapString-12                 1274150               934.3 ns/op

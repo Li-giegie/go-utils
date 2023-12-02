@@ -265,3 +265,179 @@ func (m *MapUint64) ValueToSlice() []interface{} {
 	}
 	return ms
 }
+
+type MapInt32I interface {
+	Get(k int32) (interface{}, bool)
+	Set(k int32, i interface{})
+	Delete(k int32)
+	GetMap() map[int32]interface{}
+	ToSlice() []*MapInt32Slice
+	KeyToSlice() []int32
+	ValueToSlice() []interface{}
+}
+
+// MapString 并发安全键string map
+type MapInt32 struct {
+	lock  sync.RWMutex
+	cache map[int32]interface{}
+}
+
+type MapInt32Slice struct {
+	Key   int32
+	Value interface{}
+}
+
+// NewMapString 创建一个并发安全键string map ,n 为map初始容量
+func NewMapInt32(n ...int) MapInt32I {
+	if len(n) == 0 {
+		n = []int{0}
+	}
+	m := new(MapInt32)
+	m.cache = make(map[int32]interface{}, n[0])
+	return m
+}
+
+func (m *MapInt32) Get(k int32) (interface{}, bool) {
+	m.lock.RLock()
+	defer m.lock.RUnlock()
+	i, ok := m.cache[k]
+	return i, ok
+}
+
+func (m *MapInt32) Set(k int32, i interface{}) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	m.cache[k] = i
+	return
+}
+
+func (m *MapInt32) Delete(k int32) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	delete(m.cache, k)
+}
+
+func (m *MapInt32) GetMap() map[int32]interface{} {
+	return m.cache
+}
+
+func (m *MapInt32) ToSlice() []*MapInt32Slice {
+	var ms = make([]*MapInt32Slice, len(m.cache))
+	var i int
+	for k, v := range m.cache {
+		ms[i] = &MapInt32Slice{
+			Key:   k,
+			Value: v,
+		}
+		i++
+	}
+	return ms
+}
+
+func (m *MapInt32) KeyToSlice() []int32 {
+	var ms = make([]int32, len(m.cache))
+	var i int
+	for k, _ := range m.cache {
+		ms[i] = k
+		i++
+	}
+	return ms
+}
+
+func (m *MapInt32) ValueToSlice() []interface{} {
+	var ms = make([]interface{}, len(m.cache))
+	var i int
+	for k, _ := range m.cache {
+		ms[i] = m.cache[k]
+		i++
+	}
+	return ms
+}
+
+type MapUint32I interface {
+	Get(k uint32) (interface{}, bool)
+	Set(k uint32, i interface{})
+	Delete(k uint32)
+	GetMap() map[uint32]interface{}
+	ToSlice() []*MapUint32Slice
+	KeyToSlice() []uint32
+	ValueToSlice() []interface{}
+}
+
+// MapString 并发安全键string map
+type MapUint32 struct {
+	lock  sync.RWMutex
+	cache map[uint32]interface{}
+}
+
+type MapUint32Slice struct {
+	Key   uint32
+	Value interface{}
+}
+
+// NewMapString 创建一个并发安全键string map ,n 为map初始容量
+func NewMapUint32(n ...int) MapUint32I {
+	if len(n) == 0 {
+		n = []int{0}
+	}
+	m := new(MapUint32)
+	m.cache = make(map[uint32]interface{}, n[0])
+	return m
+}
+
+func (m *MapUint32) Get(k uint32) (interface{}, bool) {
+	m.lock.RLock()
+	defer m.lock.RUnlock()
+	i, ok := m.cache[k]
+	return i, ok
+}
+
+func (m *MapUint32) Set(k uint32, i interface{}) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	m.cache[k] = i
+	return
+}
+
+func (m *MapUint32) Delete(k uint32) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	delete(m.cache, k)
+}
+
+func (m *MapUint32) GetMap() map[uint32]interface{} {
+	return m.cache
+}
+
+func (m *MapUint32) ToSlice() []*MapUint32Slice {
+	var ms = make([]*MapUint32Slice, len(m.cache))
+	var i int
+	for k, v := range m.cache {
+		ms[i] = &MapUint32Slice{
+			Key:   k,
+			Value: v,
+		}
+		i++
+	}
+	return ms
+}
+
+func (m *MapUint32) KeyToSlice() []uint32 {
+	var ms = make([]uint32, len(m.cache))
+	var i int
+	for k, _ := range m.cache {
+		ms[i] = k
+		i++
+	}
+	return ms
+}
+
+func (m *MapUint32) ValueToSlice() []interface{} {
+	var ms = make([]interface{}, len(m.cache))
+	var i int
+	for k, _ := range m.cache {
+		ms[i] = m.cache[k]
+		i++
+	}
+	return ms
+}
