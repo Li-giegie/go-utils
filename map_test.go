@@ -13,8 +13,44 @@ func TestNewMapString(t *testing.T) {
 	m.Set("1", 123)
 	m.Set("2", 456)
 	m.Set("3", 789)
-	fmt.Println(m.cache)
+	fmt.Println(m.GetMap())
 	fmt.Println(m.Get("1"))
+	for _, slice := range m.ToSlice() {
+		fmt.Println(slice)
+	}
+	for _, slice := range m.KeyToSlice() {
+		fmt.Println(slice)
+	}
+	for _, i := range m.ValueToSlice() {
+		fmt.Println(i)
+	}
+}
+
+func TestNewMapInt64(t *testing.T) {
+	m := NewMapInt64()
+	m.Set(1, 123)
+	m.Set(2, 456)
+	m.Set(3, 789)
+	fmt.Println(m.GetMap())
+	fmt.Println(m.Get(1))
+	for _, slice := range m.ToSlice() {
+		fmt.Println(slice)
+	}
+	for _, slice := range m.KeyToSlice() {
+		fmt.Println(slice)
+	}
+	for _, i := range m.ValueToSlice() {
+		fmt.Println(i)
+	}
+}
+
+func TestNewMapUint64(t *testing.T) {
+	m := NewMapUint64()
+	m.Set(1, 123)
+	m.Set(2, 456)
+	m.Set(3, 789)
+	fmt.Println(m.GetMap())
+	fmt.Println(m.Get(1))
 	for _, slice := range m.ToSlice() {
 		fmt.Println(slice)
 	}
