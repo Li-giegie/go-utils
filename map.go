@@ -2,19 +2,9 @@ package go_utils
 
 import "sync"
 
-type MapStringI interface {
-	Get(k string) (interface{}, bool)
-	Set(k string, i interface{})
-	Delete(k string)
-	GetMap() map[string]interface{}
-	ToSlice() []*MapStringSlice
-	KeyToSlice() []string
-	ValueToSlice() []interface{}
-}
-
 // MapString 并发安全键string map
 type MapString struct {
-	lock  sync.RWMutex
+	sync.RWMutex
 	cache map[string]interface{}
 }
 
@@ -24,7 +14,7 @@ type MapStringSlice struct {
 }
 
 // NewMapString 创建一个并发安全键string map ,n 为map初始容量
-func NewMapString(n ...int) MapStringI {
+func NewMapString(n ...int) *MapString {
 	if len(n) == 0 {
 		n = []int{0}
 	}
@@ -34,22 +24,22 @@ func NewMapString(n ...int) MapStringI {
 }
 
 func (m *MapString) Get(k string) (interface{}, bool) {
-	m.lock.RLock()
-	defer m.lock.RUnlock()
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
 	i, ok := m.cache[k]
 	return i, ok
 }
 
 func (m *MapString) Set(k string, i interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	m.cache[k] = i
 	return
 }
 
 func (m *MapString) Delete(k string) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	delete(m.cache, k)
 }
 
@@ -90,19 +80,17 @@ func (m *MapString) ValueToSlice() []interface{} {
 	return ms
 }
 
-type MapInt64I interface {
-	Get(k int64) (interface{}, bool)
-	Set(k int64, i interface{})
-	Delete(k int64)
-	GetMap() map[int64]interface{}
-	ToSlice() []*MapInt64Slice
-	KeyToSlice() []int64
-	ValueToSlice() []interface{}
+func (m *MapString) Range(call func(k string, v interface{})) {
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
+	for s, i := range m.cache {
+		call(s, i)
+	}
 }
 
 // MapString 并发安全键string map
 type MapInt64 struct {
-	lock  sync.RWMutex
+	sync.RWMutex
 	cache map[int64]interface{}
 }
 
@@ -112,7 +100,7 @@ type MapInt64Slice struct {
 }
 
 // NewMapString 创建一个并发安全键string map ,n 为map初始容量
-func NewMapInt64(n ...int) MapInt64I {
+func NewMapInt64(n ...int) *MapInt64 {
 	if len(n) == 0 {
 		n = []int{0}
 	}
@@ -122,22 +110,22 @@ func NewMapInt64(n ...int) MapInt64I {
 }
 
 func (m *MapInt64) Get(k int64) (interface{}, bool) {
-	m.lock.RLock()
-	defer m.lock.RUnlock()
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
 	i, ok := m.cache[k]
 	return i, ok
 }
 
 func (m *MapInt64) Set(k int64, i interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	m.cache[k] = i
 	return
 }
 
 func (m *MapInt64) Delete(k int64) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	delete(m.cache, k)
 }
 
@@ -178,19 +166,17 @@ func (m *MapInt64) ValueToSlice() []interface{} {
 	return ms
 }
 
-type MapUint64I interface {
-	Get(k uint64) (interface{}, bool)
-	Set(k uint64, i interface{})
-	Delete(k uint64)
-	GetMap() map[uint64]interface{}
-	ToSlice() []*MapUint64Slice
-	KeyToSlice() []uint64
-	ValueToSlice() []interface{}
+func (m *MapInt64) Range(call func(k int64, v interface{})) {
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
+	for s, i := range m.cache {
+		call(s, i)
+	}
 }
 
 // MapString 并发安全键string map
 type MapUint64 struct {
-	lock  sync.RWMutex
+	sync.RWMutex
 	cache map[uint64]interface{}
 }
 
@@ -200,7 +186,7 @@ type MapUint64Slice struct {
 }
 
 // NewMapString 创建一个并发安全键string map ,n 为map初始容量
-func NewMapUint64(n ...int) MapUint64I {
+func NewMapUint64(n ...int) *MapUint64 {
 	if len(n) == 0 {
 		n = []int{0}
 	}
@@ -210,22 +196,22 @@ func NewMapUint64(n ...int) MapUint64I {
 }
 
 func (m *MapUint64) Get(k uint64) (interface{}, bool) {
-	m.lock.RLock()
-	defer m.lock.RUnlock()
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
 	i, ok := m.cache[k]
 	return i, ok
 }
 
 func (m *MapUint64) Set(k uint64, i interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	m.cache[k] = i
 	return
 }
 
 func (m *MapUint64) Delete(k uint64) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	delete(m.cache, k)
 }
 
@@ -266,19 +252,17 @@ func (m *MapUint64) ValueToSlice() []interface{} {
 	return ms
 }
 
-type MapInt32I interface {
-	Get(k int32) (interface{}, bool)
-	Set(k int32, i interface{})
-	Delete(k int32)
-	GetMap() map[int32]interface{}
-	ToSlice() []*MapInt32Slice
-	KeyToSlice() []int32
-	ValueToSlice() []interface{}
+func (m *MapUint64) Range(call func(k uint64, v interface{})) {
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
+	for s, i := range m.cache {
+		call(s, i)
+	}
 }
 
 // MapString 并发安全键string map
 type MapInt32 struct {
-	lock  sync.RWMutex
+	sync.RWMutex
 	cache map[int32]interface{}
 }
 
@@ -288,7 +272,7 @@ type MapInt32Slice struct {
 }
 
 // NewMapString 创建一个并发安全键string map ,n 为map初始容量
-func NewMapInt32(n ...int) MapInt32I {
+func NewMapInt32(n ...int) *MapInt32 {
 	if len(n) == 0 {
 		n = []int{0}
 	}
@@ -298,22 +282,22 @@ func NewMapInt32(n ...int) MapInt32I {
 }
 
 func (m *MapInt32) Get(k int32) (interface{}, bool) {
-	m.lock.RLock()
-	defer m.lock.RUnlock()
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
 	i, ok := m.cache[k]
 	return i, ok
 }
 
 func (m *MapInt32) Set(k int32, i interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	m.cache[k] = i
 	return
 }
 
 func (m *MapInt32) Delete(k int32) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	delete(m.cache, k)
 }
 
@@ -354,19 +338,17 @@ func (m *MapInt32) ValueToSlice() []interface{} {
 	return ms
 }
 
-type MapUint32I interface {
-	Get(k uint32) (interface{}, bool)
-	Set(k uint32, i interface{})
-	Delete(k uint32)
-	GetMap() map[uint32]interface{}
-	ToSlice() []*MapUint32Slice
-	KeyToSlice() []uint32
-	ValueToSlice() []interface{}
+func (m *MapInt32) Range(call func(k int32, v interface{})) {
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
+	for s, i := range m.cache {
+		call(s, i)
+	}
 }
 
 // MapString 并发安全键string map
 type MapUint32 struct {
-	lock  sync.RWMutex
+	sync.RWMutex
 	cache map[uint32]interface{}
 }
 
@@ -376,7 +358,7 @@ type MapUint32Slice struct {
 }
 
 // NewMapString 创建一个并发安全键string map ,n 为map初始容量
-func NewMapUint32(n ...int) MapUint32I {
+func NewMapUint32(n ...int) *MapUint32 {
 	if len(n) == 0 {
 		n = []int{0}
 	}
@@ -386,22 +368,22 @@ func NewMapUint32(n ...int) MapUint32I {
 }
 
 func (m *MapUint32) Get(k uint32) (interface{}, bool) {
-	m.lock.RLock()
-	defer m.lock.RUnlock()
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
 	i, ok := m.cache[k]
 	return i, ok
 }
 
 func (m *MapUint32) Set(k uint32, i interface{}) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	m.cache[k] = i
 	return
 }
 
 func (m *MapUint32) Delete(k uint32) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	delete(m.cache, k)
 }
 
@@ -440,4 +422,12 @@ func (m *MapUint32) ValueToSlice() []interface{} {
 		i++
 	}
 	return ms
+}
+
+func (m *MapUint32) Range(call func(k uint32, v interface{})) {
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
+	for s, i := range m.cache {
+		call(s, i)
+	}
 }
