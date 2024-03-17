@@ -25,22 +25,22 @@ func NewMapString(n ...int) *MapString {
 
 func (m *MapString) Get(k string) (interface{}, bool) {
 	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
 	i, ok := m.M[k]
+	m.RWMutex.RUnlock()
 	return i, ok
 }
 
 func (m *MapString) Set(k string, i interface{}) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	m.M[k] = i
+	m.RWMutex.Unlock()
 	return
 }
 
 func (m *MapString) Delete(k string) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	delete(m.M, k)
+	m.RWMutex.Unlock()
 }
 
 func (m *MapString) GetMap() map[string]interface{} {
@@ -48,9 +48,9 @@ func (m *MapString) GetMap() map[string]interface{} {
 }
 
 func (m *MapString) ToSlice() []*MapStringSlice {
+	m.RWMutex.RLock()
 	var ms = make([]*MapStringSlice, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, v := range m.M {
 		ms[i] = &MapStringSlice{
 			Key:   k,
@@ -63,9 +63,9 @@ func (m *MapString) ToSlice() []*MapStringSlice {
 }
 
 func (m *MapString) KeyToSlice() []string {
+	m.RWMutex.RLock()
 	var ms = make([]string, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = k
 		i++
@@ -75,9 +75,9 @@ func (m *MapString) KeyToSlice() []string {
 }
 
 func (m *MapString) ValueToSlice() []interface{} {
+	m.RWMutex.RLock()
 	var ms = make([]interface{}, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = m.M[k]
 		i++
@@ -87,11 +87,12 @@ func (m *MapString) ValueToSlice() []interface{} {
 }
 
 func (m *MapString) Range(call func(k string, v interface{})) {
-	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	for s, i := range m.M {
 		call(s, i)
 	}
+
 }
 
 // MapString 并发安全键string map
@@ -117,22 +118,22 @@ func NewMapInt64(n ...int) *MapInt64 {
 
 func (m *MapInt64) Get(k int64) (interface{}, bool) {
 	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
 	i, ok := m.M[k]
+	m.RWMutex.RUnlock()
 	return i, ok
 }
 
 func (m *MapInt64) Set(k int64, i interface{}) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	m.M[k] = i
+	m.RWMutex.Unlock()
 	return
 }
 
 func (m *MapInt64) Delete(k int64) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	delete(m.M, k)
+	m.RWMutex.Unlock()
 }
 
 func (m *MapInt64) GetMap() map[int64]interface{} {
@@ -140,9 +141,9 @@ func (m *MapInt64) GetMap() map[int64]interface{} {
 }
 
 func (m *MapInt64) ToSlice() []*MapInt64Slice {
+	m.RWMutex.RLock()
 	var ms = make([]*MapInt64Slice, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, v := range m.M {
 		ms[i] = &MapInt64Slice{
 			Key:   k,
@@ -155,9 +156,9 @@ func (m *MapInt64) ToSlice() []*MapInt64Slice {
 }
 
 func (m *MapInt64) KeyToSlice() []int64 {
+	m.RWMutex.RLock()
 	var ms = make([]int64, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = k
 		i++
@@ -167,9 +168,9 @@ func (m *MapInt64) KeyToSlice() []int64 {
 }
 
 func (m *MapInt64) ValueToSlice() []interface{} {
+	m.RWMutex.RLock()
 	var ms = make([]interface{}, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = m.M[k]
 		i++
@@ -179,8 +180,8 @@ func (m *MapInt64) ValueToSlice() []interface{} {
 }
 
 func (m *MapInt64) Range(call func(k int64, v interface{})) {
-	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	for s, i := range m.M {
 		call(s, i)
 	}
@@ -209,22 +210,22 @@ func NewMapUint64(n ...int) *MapUint64 {
 
 func (m *MapUint64) Get(k uint64) (interface{}, bool) {
 	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
 	i, ok := m.M[k]
+	m.RWMutex.RUnlock()
 	return i, ok
 }
 
 func (m *MapUint64) Set(k uint64, i interface{}) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	m.M[k] = i
+	m.RWMutex.Unlock()
 	return
 }
 
 func (m *MapUint64) Delete(k uint64) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	delete(m.M, k)
+	m.RWMutex.Unlock()
 }
 
 func (m *MapUint64) GetMap() map[uint64]interface{} {
@@ -232,9 +233,9 @@ func (m *MapUint64) GetMap() map[uint64]interface{} {
 }
 
 func (m *MapUint64) ToSlice() []*MapUint64Slice {
+	m.RWMutex.RLock()
 	var ms = make([]*MapUint64Slice, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, v := range m.M {
 		ms[i] = &MapUint64Slice{
 			Key:   k,
@@ -247,9 +248,9 @@ func (m *MapUint64) ToSlice() []*MapUint64Slice {
 }
 
 func (m *MapUint64) KeyToSlice() []uint64 {
+	m.RWMutex.RLock()
 	var ms = make([]uint64, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = k
 		i++
@@ -259,9 +260,9 @@ func (m *MapUint64) KeyToSlice() []uint64 {
 }
 
 func (m *MapUint64) ValueToSlice() []interface{} {
+	m.RWMutex.RLock()
 	var ms = make([]interface{}, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = m.M[k]
 		i++
@@ -271,8 +272,8 @@ func (m *MapUint64) ValueToSlice() []interface{} {
 }
 
 func (m *MapUint64) Range(call func(k uint64, v interface{})) {
-	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	for s, i := range m.M {
 		call(s, i)
 	}
@@ -301,22 +302,22 @@ func NewMapInt32(n ...int) *MapInt32 {
 
 func (m *MapInt32) Get(k int32) (interface{}, bool) {
 	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
 	i, ok := m.M[k]
+	m.RWMutex.RUnlock()
 	return i, ok
 }
 
 func (m *MapInt32) Set(k int32, i interface{}) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	m.M[k] = i
+	m.RWMutex.Unlock()
 	return
 }
 
 func (m *MapInt32) Delete(k int32) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	delete(m.M, k)
+	m.RWMutex.Unlock()
 }
 
 func (m *MapInt32) GetMap() map[int32]interface{} {
@@ -324,9 +325,9 @@ func (m *MapInt32) GetMap() map[int32]interface{} {
 }
 
 func (m *MapInt32) ToSlice() []*MapInt32Slice {
+	m.RWMutex.RLock()
 	var ms = make([]*MapInt32Slice, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, v := range m.M {
 		ms[i] = &MapInt32Slice{
 			Key:   k,
@@ -339,9 +340,9 @@ func (m *MapInt32) ToSlice() []*MapInt32Slice {
 }
 
 func (m *MapInt32) KeyToSlice() []int32 {
+	m.RWMutex.RLock()
 	var ms = make([]int32, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = k
 		i++
@@ -351,9 +352,9 @@ func (m *MapInt32) KeyToSlice() []int32 {
 }
 
 func (m *MapInt32) ValueToSlice() []interface{} {
+	m.RWMutex.RLock()
 	var ms = make([]interface{}, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = m.M[k]
 		i++
@@ -363,8 +364,8 @@ func (m *MapInt32) ValueToSlice() []interface{} {
 }
 
 func (m *MapInt32) Range(call func(k int32, v interface{})) {
-	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	for s, i := range m.M {
 		call(s, i)
 	}
@@ -393,22 +394,22 @@ func NewMapUint32(n ...int) *MapUint32 {
 
 func (m *MapUint32) Get(k uint32) (interface{}, bool) {
 	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
 	i, ok := m.M[k]
+	m.RWMutex.RUnlock()
 	return i, ok
 }
 
 func (m *MapUint32) Set(k uint32, i interface{}) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	m.M[k] = i
+	m.RWMutex.Unlock()
 	return
 }
 
 func (m *MapUint32) Delete(k uint32) {
 	m.RWMutex.Lock()
-	defer m.RWMutex.Unlock()
 	delete(m.M, k)
+	m.RWMutex.Unlock()
 }
 
 func (m *MapUint32) GetMap() map[uint32]interface{} {
@@ -416,9 +417,9 @@ func (m *MapUint32) GetMap() map[uint32]interface{} {
 }
 
 func (m *MapUint32) ToSlice() []*MapUint32Slice {
+	m.RWMutex.RLock()
 	var ms = make([]*MapUint32Slice, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, v := range m.M {
 		ms[i] = &MapUint32Slice{
 			Key:   k,
@@ -431,9 +432,9 @@ func (m *MapUint32) ToSlice() []*MapUint32Slice {
 }
 
 func (m *MapUint32) KeyToSlice() []uint32 {
+	m.RWMutex.RLock()
 	var ms = make([]uint32, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = k
 		i++
@@ -443,9 +444,9 @@ func (m *MapUint32) KeyToSlice() []uint32 {
 }
 
 func (m *MapUint32) ValueToSlice() []interface{} {
+	m.RWMutex.RLock()
 	var ms = make([]interface{}, len(m.M))
 	var i int
-	m.RWMutex.RLock()
 	for k, _ := range m.M {
 		ms[i] = m.M[k]
 		i++
@@ -455,8 +456,8 @@ func (m *MapUint32) ValueToSlice() []interface{} {
 }
 
 func (m *MapUint32) Range(call func(k uint32, v interface{})) {
-	m.RWMutex.RLock()
-	defer m.RWMutex.RUnlock()
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
 	for s, i := range m.M {
 		call(s, i)
 	}
