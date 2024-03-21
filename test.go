@@ -53,3 +53,18 @@ func Run(num int, f func()) *TResult {
 	end := time.Now()
 	return newTResult(start, end, num, "Sync")
 }
+
+func AsyncRunWithIndex(num int, f func(i int)) *TResult {
+	var w sync.WaitGroup
+	w.Add(num)
+	start := time.Now()
+	for i := 0; i < num; i++ {
+		go func(i int) {
+			defer w.Done()
+			f(i)
+		}(i)
+	}
+	w.Wait()
+	end := time.Now()
+	return newTResult(start, end, num, "AsyncRun")
+}
