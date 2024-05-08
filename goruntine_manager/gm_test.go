@@ -2,7 +2,6 @@ package goruntine_manager
 
 import (
 	"fmt"
-	"log"
 	"testing"
 	"time"
 )
@@ -14,21 +13,15 @@ func TestNewGoroutineManger(t *testing.T) {
 		return
 	}
 	go func() {
-		for i := 0; i < 10; i++ {
-			n := i
-			if err := gm.Dilatation(1); err != nil {
-				log.Fatalln(err)
-			}
-			gm.Exit()
-			err := gm.Run(func() {
+		gm.Run(func() {
+			for {
+				fmt.Println("running")
 				time.Sleep(time.Second)
-				fmt.Println(n)
-			})
-			if err != nil {
-				log.Fatalln(err)
 			}
-		}
+		})
 	}()
-
+	time.Sleep(time.Second)
+	gm.Exit()
+	fmt.Println("exit")
 	select {}
 }
